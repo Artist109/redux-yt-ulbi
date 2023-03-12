@@ -1,32 +1,43 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
+import { addCashAction, getCashAction } from "./store/cashReducer";
+import {
+  addCustomerAction,
+  removeCustomerAction,
+} from "./store/customerReducer";
 
 function App() {
   const dispatch = useDispatch();
+  // в state.cash.cash первый cash это ключ в объекте rootReducer, т.е. вначале ключ - говорим к какому редюсеру обращаемся,
+  // а потом к каким данным к этом редюсере
   const cash = useSelector((state) => state.cash.cash);
   const customers = useSelector((state) => state.customers.customers);
   console.log(cash);
 
   const addCash = (cash) => {
-    dispatch({ type: "ADD_CASH", payload: cash });
+    dispatch(addCashAction(cash));
   };
 
   const getCash = (cash) => {
-    dispatch({ type: "GET_CASH", payload: cash });
+    dispatch(getCashAction(cash));
   };
 
-  const addCustomer = (customers) => {
-    dispatch({ type: "ADD_CASH", payload: customers });
+  const addCustomer = (name) => {
+    const customer1 = {
+      name,
+      id: Date.now(),
+    };
+    dispatch(addCustomerAction(customer1));
   };
 
-  const deleteCustomer = (customer) => {
-    dispatch({ type: "GET_CASH", payload: customers });
+  const removeCustomer = (customer) => {
+    dispatch(removeCustomerAction(customer.id));
   };
 
   return (
     <div className="App">
-      <div style={{ display: "flex" }}>
+      <div>
         <div>{cash}</div>
         <button onClick={() => addCash(Number(prompt()))}>
           Пополнить счет
@@ -35,7 +46,19 @@ function App() {
           Снять со счета
         </button>
       </div>
-      {}
+      <div>
+        <button onClick={() => addCustomer(prompt())}>Добавить клиента</button>
+        <button onClick={() => removeCustomer(prompt())}>
+          Удалить клиента
+        </button>
+        {customers.length > 0 ? (
+          customers.map((c) => (
+            <div onClick={() => removeCustomer(c)}>{c.name}</div>
+          ))
+        ) : (
+          <div>Клиентов пока нет!</div>
+        )}
+      </div>
     </div>
   );
 }
