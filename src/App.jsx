@@ -1,8 +1,10 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
+import { fetchCustomers } from "./store/asyncAction/customers";
 import { addCashAction, getCashAction } from "./store/cashReducer";
 import {
+  addBulkCustomerAction,
   addCustomerAction,
   removeCustomerAction,
 } from "./store/customerReducer";
@@ -31,6 +33,10 @@ function App() {
     dispatch(addCustomerAction(customer1));
   };
 
+  //  const addBulkCustomers = () => {
+  //    dispatch(addBulkCustomerAction(fetchCustomers()));
+  //  };
+
   const removeCustomer = (customer) => {
     dispatch(removeCustomerAction(customer.id));
   };
@@ -48,8 +54,8 @@ function App() {
       </div>
       <div>
         <button onClick={() => addCustomer(prompt())}>Добавить клиента</button>
-        <button onClick={() => removeCustomer(prompt())}>
-          Удалить клиента
+        <button onClick={() => dispatch(fetchCustomers())}>
+          Получить клиентов из базы
         </button>
         {customers.length > 0 ? (
           customers.map((c) => (
